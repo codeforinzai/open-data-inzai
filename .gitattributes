@@ -1,1 +1,1 @@
-*.csv diff=sjis
+original/*.csv diff=sjis
