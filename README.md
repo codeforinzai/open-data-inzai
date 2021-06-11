@@ -9,6 +9,12 @@
 - 改行コードの変更（CRLF -> LF）
 - データ形式の変換（CSV->JSON）
 
+# Sample
+
+Googleマイマップにデータをマッピングしたものです。
+
+<iframe src="https://www.google.com/maps/d/embed?mid=1mQcsV1waErYBqIN9fLenX_nmzBQFgyYZ" width="640" height="480"></iframe>
+
 # データ形式
 ## originalディレクトリ
 
