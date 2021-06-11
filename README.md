@@ -11,9 +11,9 @@
 
 # Sample
 
-Googleマイマップにデータをマッピングしたものです。
+[印西市施設マイマップ](https://www.google.com/maps/d/edit?mid=1mQcsV1waErYBqIN9fLenX_nmzBQFgyYZ&usp=sharing)（Googleマイマップにデータをマッピングしたものです）
 
-<iframe src="https://www.google.com/maps/d/embed?mid=1mQcsV1waErYBqIN9fLenX_nmzBQFgyYZ" width="640" height="480"></iframe>
+<img width="1353" alt="Inzai city my map" src="https://user-images.githubusercontent.com/2178775/121727255-a0afbe80-cb26-11eb-8757-3e4bc46b8530.png">
 
 # データ形式
 ## originalディレクトリ
