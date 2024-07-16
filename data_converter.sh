@@ -1,13 +1,22 @@
-# Convert original csv
-for file in `find ./original/*.csv -type f -exec basename -s .csv {} \;`; do
-  # Convert character code from SJIS to UTF-8
-  iconv -f sjis -t utf-8 ./original/$file.csv > ./csv/$file.csv
+# Convert original files
+for file in `find ./original -name "*.csv" -type f -exec basename {} \;`; do
+  # Determine the file path and base name
+  filepath="./original/$file"
+  base_name="${file%.*}"
 
+  # Convert file to UTF-8
   # Convert line feed code to LF
-  nkf -Lu --overwrite ./csv/$file.csv
+  nkf -w -Lu "$filepath" > "./csv/$base_name.csv"
+
+  # Check if the file is TSV (based on the presence of tabs in the first line)
+  if head -n 1 "./csv/$base_name.csv" | grep -q $'\t'; then
+    # Convert TSV to CSV
+    awk 'BEGIN {FS="\t"; OFS=","} { $1=$1; print }' "./csv/$base_name.csv" > "./csv/$base_name.csv.tmp"
+    mv "./csv/$base_name.csv.tmp" "./csv/$base_name.csv"
+  fi
 
   # Convert from csv to json
-  csv2json -d ./csv/$file.csv ./json/tmp_$file.json
-  cat ./json/tmp_$file.json | jq . > ./json/$file.json
+  csv2json -d "./csv/$base_name.csv" "./json/tmp_$base_name.json"
+  cat "./json/tmp_$base_name.json" | jq . > "./json/$base_name.json"
   rm -rf ./json/tmp_*.json
 done

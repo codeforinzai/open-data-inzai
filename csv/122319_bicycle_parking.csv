@@ -1,0 +1,10 @@
+公営駐輪場_全国地方公共団体コード,施設_ID,公営駐輪場_ID,公営駐輪場_名称,公営駐輪場_名称（カナ）,公営駐輪場_名称（英字）,公営駐輪場_説明,公営駐輪場_緯度,公営駐輪場_経度,公営駐輪場_座標参照系,公営駐輪場_座標参照系コード,公営駐輪場_屋内外,公営駐輪場_最大駐輪台数
+122319,,cyclepark001,木下駅北口自転車駐車場,キオロシエキキタグチジテンシャチュウシャジョウ,kiorosiekikitagutizitensyatyusyazyou,有料,35.839,140.14731,,,屋内,720
+122319,,cyclepark002,木下駅南口自転車駐車場,キオロシエキミナミグチジテンシャチュウシャジョウ,kiorosiekiminamigutizitensyatyusyazyou,無料,35.83886,140.14899,,,屋外,300
+122319,,cyclepark003,小林駅北口自転車駐車場,コバヤシエキキタグチジテンシャチュウシャジョウ,kobayasiekikitagutizitensyatyusyazyou,無料,35.83099,140.19334,,,屋外,195
+122319,,cyclepark004,小林駅南口自転車駐車場,コバヤシエキミナミグチジテンシャチュウシャジョウ,kobayasiekiminamigutizitensyatyusyazyou,有料,35.83011,140.1937,,,屋内,622
+122319,,cyclepark005,千葉ニュータウン中央駅北口自転車駐車場,チバニュータウンチュウオウエキキタグチジテンシャチュウシャジョウ,chibanyutauntyuouekikitagutizitensyatyusyazyou,有料,35.80068,140.1145,,,屋内,3021
+122319,,cyclepark006,千葉ニュータウン中央駅南口自転車駐車場,チバニュータウンチュウオウエキミナミグチジテンシャチュウシャジョウ,chibanyutauntyuouekiminamigutizitensyatyusyazyou,有料,35.79984,140.1173,,,屋内,1603
+122319,,cyclepark007,印西牧の原駅北口自転車駐車場,インザイマキノハラエキキタグチジテンシャチュウシャジョウ,inzaimakinoharaekikitagutizitensyatyusyazyou,有料,35.80498,140.16736,,,屋内,1780
+122319,,cyclepark008,印西牧の原駅南口自転車駐車場,インザイマキノハラエキミナミグチジテンシャチュウシャジョウ,inzaimakinoharaekiminamigutizitensyatyusyazyou,有料,35.80286,140.16724,,,屋内,1746
+122319,,cyclepark009,印旛日本医大駅前第一自転車駐車場,インバニホンイダイエキマエダイイチジテンシャチュウシャジョウ,inbanihonidaiekimaedaiitizitensyatyusyazyou,無料,35.7868,140.20436,,,屋外,180
