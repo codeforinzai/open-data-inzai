@@ -1,8 +1,10 @@
-# Convert original files
-for file in `find ./original -name "*.csv" -type f -exec basename {} \;`; do
-  # Determine the file path and base name
-  filepath="./original/$file"
-  base_name="${file%.*}"
+#!/bin/bash
+
+# Function to process a single file
+process_file() {
+  local file=$1
+  local filepath="./original/$file"
+  local base_name="${file%.*}"
 
   # Convert file to UTF-8
   # Convert line feed code to LF
@@ -19,4 +21,15 @@ for file in `find ./original -name "*.csv" -type f -exec basename {} \;`; do
   csv2json -d "./csv/$base_name.csv" "./json/tmp_$base_name.json"
   cat "./json/tmp_$base_name.json" | jq . > "./json/$base_name.json"
   rm -rf ./json/tmp_*.json
-done
+}
+
+# Check if a specific file is provided as an argument
+if [ "$#" -eq 1 ]; then
+  # Process the specified file
+  process_file "$1"
+else
+  # Process all files in the ./original directory
+  for file in `find ./original -name "*.csv" -type f -exec basename {} \;`; do
+    process_file "$file"
+  done
+fi
