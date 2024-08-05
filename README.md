@@ -1,5 +1,7 @@
 # Inzai City Open Data
 
+discord
+
 本リポジトリは千葉県印西市のオープンデータを、プログラム等から扱いやすい形に改変したデータを公開しています。
 
 - [印西市のオープンデータ](https://www.city.inzai.lg.jp/0000004803.html)
