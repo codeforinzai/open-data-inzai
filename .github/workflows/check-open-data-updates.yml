@@ -1,0 +1,44 @@
+name: Check for Updates in Open Data List
+
+on:
+  schedule:
+    - cron: '0 0 1 * *' # 毎月1日に実行
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download latest Open Data CSV file
+        run: |
+          wget -O /tmp/latest_open_data_list.csv https://www.city.inzai.lg.jp/cmsfiles/contents/0000004/4803/122319_open_data_list.csv || { echo "Failed to download the CSV file"; exit 1; }
+
+      - name: Compare CSV files
+        id: compare
+        run: |
+          if [ -f ./original/122319_open_data_list.csv ]; then
+            diff -u /tmp/latest_open_data_list.csv ./original/122319_open_data_list.csv > diff_output.txt || true
+            if [ -s diff_output.txt ]; then
+              echo "diff_exists=true" >> $GITHUB_OUTPUT
+            else
+              echo "diff_exists=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "Original file does not exist. Creating one for future comparisons."
+            cp /tmp/latest_open_data_list.csv ./original/122319_open_data_list.csv
+            echo "diff_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Issue if updates are found
+        if: steps.compare.outputs.diff_exists == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          issue_title="Updates found in Open Data List"
+          issue_body=$(cat diff_output.txt)
+          issue_body="The following updates were found in the Open Data List:\n\n\`\`\`\n$issue_body\n\`\`\`"
+          gh issue create --title "$issue_title" --body "$issue_body" --repo $GITHUB_REPOSITORY
