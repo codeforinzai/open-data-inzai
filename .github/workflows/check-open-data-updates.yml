@@ -1,0 +1,72 @@
+name: Check for Updates in Open Data List
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+
+    env:
+      OPEN_DATA_LIST_URL: "https://www.city.inzai.lg.jp/cmsfiles/contents/0000004/4803/122319_open_data_list.csv"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if original file exists
+        id: check_original
+        run: |
+          if [ -f ./original/122319_open_data_list.csv ]; then
+            echo "original_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "original_exists=false" >> $GITHUB_OUTPUT
+            echo "Original Open Data List file not found"
+          fi
+
+      - name: Download latest Open Data CSV file
+        id: download
+        run: |
+          wget -O /tmp/latest_open_data_list.csv $OPEN_DATA_LIST_URL || { echo "Failed to download the CSV file"; echo "download_failed=true" >> $GITHUB_OUTPUT; }
+
+      - name: Compare CSV files
+        if: steps.check_original.outputs.original_exists == 'true' && steps.download.outputs.download_failed != 'true'
+        id: compare
+        run: |
+          diff_output=$(diff -u /tmp/latest_open_data_list.csv ./original/122319_open_data_list.csv || true)
+          if [ -n "$diff_output" ]; then
+            echo "Difference found in Open Data List"
+            echo "diff_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "No difference found in Open Data List"
+            echo "diff_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Issue if updates are found
+        if: steps.compare.outputs.diff_exists == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          issue_title="オープンデータリストに更新があります"
+          issue_body="オープンデータリストファイルに変更があります。内容を確認の上、速やかにデータの更新を行ってください。"
+          gh issue create --title "$issue_title" --body "$issue_body" --repo $GITHUB_REPOSITORY
+
+      - name: Create Issue if original file does not exist
+        if: steps.check_original.outputs.original_exists != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          issue_title="オリジナルのオープンデータリストファイルが存在しません"
+          issue_body="リポジトリにオリジナルのオープンデータリストファイル（/original/122319_open_data_list.csv）が見つかりませんでした。今後の比較のためにファイルを追加してください。"
+          gh issue create --title "$issue_title" --body "$issue_body" --repo $GITHUB_REPOSITORY
+
+      - name: Create Issue if download failed
+        if: steps.download.outputs.download_failed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          issue_title="最新のオープンデータリストのダウンロードに失敗しました"
+          issue_body="最新のオープンデータリストのダウンロードに失敗しました。URLをご確認の上再度お試しください。"
+          gh issue create --title "$issue_title" --body "$issue_body" --repo $GITHUB_REPOSITORY
