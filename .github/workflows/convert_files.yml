@@ -1,0 +1,47 @@
+name: Convert and Process Changed Files on Pull Request
+
+on:
+  pull_request:
+    paths:
+      - 'original/**/*.csv'
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nkf jq npm
+          sudo npm install -g csv2json
+
+      # 変更されたCSVファイルを処理
+      - name: Run data_converter.sh script for changed files
+        run: |
+          chmod +x ./data_converter.sh
+          git fetch origin ${{ github.base_ref }}
+          git diff --name-only --diff-filter=ACMRT origin/${{ github.base_ref }} -- original/ | grep '^original/.*\.csv$' | while read -r file; do
+            ./data_converter.sh "$(basename $file)"
+          done
+        shell: /usr/bin/bash -e {0}
+
+      # 生成されたファイルをコミットしてプッシュ
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./csv/*.csv ./json/*.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Convert files to CSV and JSON"
+            git push origin ${{ github.head_ref }} || {
+              echo "Failed to push changes, please resolve conflicts manually."
+              exit 1
+            }
+          fi
+        shell: /usr/bin/bash -e {0}
